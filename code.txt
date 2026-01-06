@@ -1,1 +1,136 @@
+#dictionary to strore employee details
 
+employees={}
+
+#function to add employee
+
+def add_employee(emp_id,name,age,salary,department):
+    employees[emp_id]={
+        "Name":name,
+        "Age":age,
+        "salary":salary,
+        "Department":department
+    }
+    print (f"Employee{name}added successfully!")
+#Function to view all employee
+
+def view_employee():
+    if employees:
+        for emp_id, emp_detais in employees.items():
+            print(f"ID:{emp_id},Detais:{emp_detais}")
+    else:
+            print("no employee added yet!")
+
+#function to update employee details
+
+def update_employee(emp_id,name=None,age=None,salary=None,department=None):
+    try:
+        if emp_id in employees:
+            if name:
+                employees[emp_id]["Name"] = name
+            if age:
+                employees[emp_id]["Age"] = age
+            if salary:
+                employees[emp_id]["Salary"] = salary
+            if department:
+                employees[emp_id]["Department"] = department
+
+            print(f"Employee {emp_id} Updated Succeddfully..!")
+
+        else:
+            print(f"Employee with ID {emp_id}Not Found")
+    except KeyError as e:
+        print(f"Error Updating Employee Details {e}")  
+
+# Function to Remove an Employee
+def remove_employee(emp_id):
+    try:
+        emp = employees.pop(emp_id)
+        print(f"Employee {emp["Name"]} Removed Successfully..!")
+    except KeyError :
+        print(f"Employee with ID {emp_id} not Found")
+
+
+#Function To Save Employee Date to a file Without JSON
+def save_to_file(filename):
+    try:
+        with open(filename,"w") as file:
+            for emp_id,details in employees.items():
+                line = f"{emp_id}:-> {details["Name"]},{details["Age"]},{details["salary"]},{details["Department"]}\n"
+                file.write(line)
+        print("Employee Data Saved Successfully..!")
+    except Exception as e:
+        print(f"Error : {e}")
+
+#function to load employee data for afile without JSON
+def load_from_file(filename):
+    try:
+        with open(filename,"r") as file:
+             global employees
+             employees = {}
+             for line in file:
+                 emp_data = line.strip().split(",")
+                 emp_id,name,age,salary,department = emp_data
+                 employees[emp_id]={
+                     "Name":name,
+                     "Age":age,
+                     "Salary":salary,
+                     "Department":department
+                 }
+        print("Employee data loaded Succesfully..!")
+    except FileNotFoundError:
+        print(f"file{filename}not found")
+    except Exception as e:
+        print(f"Error : {e}")   
+# Main Menu Function
+
+def menu():
+
+    while True:
+        print("Welcome to the employee management system : ")
+        print("1. Add Employee")
+        print("2. View Employee")
+        print("3. update Employee")
+        print("4. Delete Employee")
+        print("5. save to file")
+        print("6. load from file")
+        print("7. Exit")
+
+        choice = input("Enter your choice : ")
+        
+        if choice == "1":
+           emp_id = input("Enter Employee ID:")
+           name = input("Enter Employee Name :")
+           age = input("Enter Employee Age : ")
+           salary = input("Enter Employee Salary :")
+           department = input("Enter Department : ")
+
+           add_employee(emp_id,name,age,salary,department)
+        
+        elif choice =="2":
+            view_employee()
+        
+        elif choice =="3":
+            emp_id = input("Enter Employee ID to Update :")
+            name = input("Enter New Name (Leave Blank To Skip)")or None
+            age = input("Enter New Age (Leave Blank To Skip)")or None    
+            salary = input("Enter New Salary (Leave Blank To Skip)")or None
+            department = input("Enter New Department (Leave Blank To Skip)")or None
+            update_employee(emp_id,name,age,salary,department)
+        
+        elif choice =="4":
+            emp_id = input("Enter Employee ID to Remove : ")
+            remove_employee(emp_id)
+        
+        elif choice =="5":
+            filename = input("Enter FileName to Save to :")
+            save_to_file()
+        
+        elif choice =="6":
+            filename = input("Enter Filename to Load from : ")
+            load_from_file()
+        
+        elif choice =="7":
+            break
+
+menu()
